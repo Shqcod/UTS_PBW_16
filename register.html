@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-center bg-no-repeat bg-cover flex items-center justify-center min-h-screen" style="background-image: url('background.jpg')">
+  <div class="bg-white bg-opacity-80 p-8 rounded-xl shadow-md w-full max-w-md z-10">
+    <h2 class="text-xl font-semibold tracking-wide text-center mb-6">CREATE <span class="text-red-500">ACCOUNT</span></h2>
+    <div class="space-y-4">
+      <div class="flex gap-4">
+        <input type="text" id="firstName" placeholder="First Name" class="w-1/2 px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+        <input type="text" id="lastName" placeholder="Last Name" class="w-1/2 px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+      </div>
+      <input type="text" id="username" placeholder="Username" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+      <input type="email" id="regEmail" placeholder="Email" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+      <input type="password" id="regPassword" placeholder="Password" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+      <button onclick="register()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md font-semibold text-center">
+        REGISTER
+      </button>
+    </div>
+
+    <p class="text-center text-sm mt-4 text-gray-600">
+      Sudah punya akun? <a href="index.html" class="text-orange-500 hover:underline">Login</a>
+    </p>
+  </div>
+
+  <script>
+    async function register() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
+        return alert('Harap lengkapi semua data.');
+      }
+
+      if (password !== confirmPassword) {
+        return alert('Password dan konfirmasi password tidak cocok.');
+      }
+
+      const fullName = `${firstName} ${lastName}`;
+
+      try {
+        const res = await fetch('https://api-todo-list-pbw.vercel.app/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, email, password })
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          alert('Registrasi berhasil! Silakan login.');
+          window.location.href = 'index.html';
+        } else {
+          alert('Registrasi gagal: ' + result.message);
+        }
+
+      } catch (err) {
+        alert('Terjadi kesalahan: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
