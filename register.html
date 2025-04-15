@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-center bg-no-repeat bg-cover flex items-center justify-center min-h-screen" style="background-image: url('background.jpg')">
+
+ <!-- Main Container -->
+ <div class="flex items-center justify-center min-h-screen relative z-10">
+    <div class="bg-white bg-opacity-80 p-8 rounded-xl shadow-md w-full max-w-2xl">
+      <!-- Logo -->
+      <div class="text-center mb-6">
+        <h2 class="text-xl font-semibold tracking-wide">CREATE <span class="text-red-500">ACCOUNT</span></h2>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-4">
+        <!-- Name -->
+        <div class="flex gap-4">
+          <div class="w-1/2">
+            <label class="block text-sm font-medium mb-1">First Name</label>
+            <input type="text" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+          </div>
+          <div class="w-1/2">
+            <label class="block text-sm font-medium mb-1">Last Name</label>
+            <input type="text" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Username</label>
+          <input type="text" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium mb-1">E-Mail</label>
+          <input type="email" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Password</label>
+          <input type="password" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Confirm Password</label>
+          <input type="password" class="w-full px-4 py-2 bg-orange-100 rounded-md focus:outline-none" />
+        </div>
+
+       <!-- Register Button -->
+          <div class="text-center pt-4">
+            <a href="index.html" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md font-semibold text-center">
+              REGISTER
+            </a>
+          </div>
+
+
+        <!-- Sign In Link -->
+        <p class="text-center text-sm mt-4 text-gray-600">
+          Already have an account?
+          <a href="index.html" class="text-orange-500 hover:underline">Sign in</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
