@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo List</title>
+</head>
+<body>
+  <h1>Todo List</h1>
+  <input type="text" id="newTodo" placeholder="Tambah tugas...">
+  <button onclick="createTodo()">Tambah</button>
+  <ul id="todoList"></ul>
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Silakan login terlebih dahulu');
+      window.location.href = 'auth.html';
+    }
+
+    async function getTodos() {
+      const res = await fetch('https://api-todo-list-pbw.vercel.app/todo/getAllTodos', {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      const data = await res.json();
+
+      const list = document.getElementById('todoList');
+      list.innerHTML = '';
+
+      data.data.forEach(todo => {
+        const li = document.createElement('li');
+
+        li.innerHTML = `
+          <input type="checkbox" id="check-${todo._id}" ${todo.onCheckList ? 'checked' : ''}>
+
+          <input type="text" id="text-${todo._id}" value="${todo.text}" disabled style="width: 200px;">
+
+          <button id="btn-${todo._id}" onclick="enableEdit('${todo._id}')">Edit</button>
+
+          <button onclick="saveChecklist('${todo._id}')">✔</button>
+
+          <button onclick="deleteTodo('${todo._id}')">Hapus</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    async function createTodo() {
+      const text = document.getElementById('newTodo').value;
+      if (!text) return alert('Isi todo dulu');
+
+      const res = await fetch('https://api-todo-list-pbw.vercel.app/todo/createTodo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ text })
+      });
+
+      await res.json();
+      document.getElementById('newTodo').value = '';
+      getTodos();
+    }
+
+    async function saveEdit(id) {
+      const newText = document.getElementById(`text-${id}`).value;
+      const isChecked = document.getElementById(`check-${id}`).checked;
+  
+      await fetch(`https://api-todo-list-pbw.vercel.app/todo/updateTodo/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          text: newText,
+          onCheckList: false
+        })
+      });
+
+      getTodos();
+    }
+
+    async function saveChecklist(id) {
+      const newText = document.getElementById(`text-${id}`).value;
+      const isChecked = document.getElementById(`check-${id}`).checked;
+
+      await fetch(`https://api-todo-list-pbw.vercel.app/todo/updateTodo/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          text: newText,
+          onCheckList: isChecked
+        })
+      });
+
+      getTodos();
+    }
+
+
+    async function updateTodo(id, text, onCheckList) {
+      await fetch(`https://api-todo-list-pbw.vercel.app/todo/updateTodo/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ text, onCheckList })
+      });
+
+      getTodos();
+    }
+
+    async function deleteTodo(id) {
+      await fetch(`https://api-todo-list-pbw.vercel.app/todo/deleteTodo/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+
+      getTodos();
+    }
+
+    function enableEdit(id) {
+      const textInput = document.getElementById(`text-${id}`);
+      const checkbox = document.getElementById(`check-${id}`);
+      const button = document.getElementById(`btn-${id}`);
+
+      if (button.textContent === 'Edit') {
+        textInput.disabled = false;
+        textInput.focus();
+        button.textContent = 'Simpan';
+      } else {
+        // Simpan perubahan
+        const newText = textInput.value;
+        const isChecked = document.getElementById(`check-${id}`).checked;
+
+        fetch(`https://api-todo-list-pbw.vercel.app/todo/updateTodo/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            text: newText,
+            onCheckList: isChecked
+          })
+        }).then(() => {
+          textInput.disabled = true;
+          button.textContent = 'Edit';
+          getTodos(); // Refresh list
+        });
+      }
+    }
+    
+
+    function logout() {
+      const userId = localStorage.getItem('userId');
+      fetch(`https://api-todo-list-pbw.vercel.app/auth/logout/${userId}`, {
+        method: 'POST'
+      }).then(() => {
+        localStorage.clear();
+        alert('Berhasil logout');
+        window.location.href = 'auth.html';
+      });
+    }
+
+    getTodos();
+  </script>
+</body>
+</html>
