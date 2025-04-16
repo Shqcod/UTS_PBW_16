@@ -56,6 +56,7 @@
 
         const result = await res.json();
         if (res.ok) {
+          localStorage.setItem('userName', fullName);
           alert('Registrasi berhasil! Silakan login.');
           window.location.href = 'index.html';
         } else {
