@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To Do List UTS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#ECE7D4] bg-cover bg-no-repeat bg-center" style="background-image: url('background.jpg');">
+
+  <!-- Navbar -->
+  <nav class="bg-orange-500 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold"> My Planner</h1>
+      <ul class="flex space-x-6">
+
+        <div class="flex items-center space-x-3">
+          <span class="font-medium text-sm">Shaldi Shauqi</span>
+          <div class="w-9 h-9 bg-orange-400 rounded-full flex items-center justify-center text-white font-bold">
+            SS
+          </div>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="background" class="absolute inset-0 -z-10"></div>
+
+  <div class="flex justify-center items-center py-12">
+    <div class="container text-center border-[10px] border-orange-500 bg-white p-12 rounded-2xl shadow-xl w-full max-w-3xl">
+      <h1 class="text-4xl font-bold text-orange-700"> To-Do List </h1>
+
+      <!-- Input tugas + tanggal dan waktu dalam satu baris -->
+      <div class="mt-8 flex flex-col md:flex-row gap-4">
+        <input id="taskInput" type="text" placeholder="Tambahkan tugas..." class="p-3 border-2 border-orange-400 rounded-lg w-full">
+        <input id="taskDateTime" type="datetime-local" class="p-3 border-2 border-orange-400 rounded-lg w-full md:w-[270px]">
+      </div>
+
+      <button onclick="addTask()" class="mt-6 w-full bg-orange-500 text-white p-3 rounded-lg hover:bg-orange-600 transition duration-300">
+        ➕ Tambah
+      </button>
+
+      <ul id="taskList" class="mt-6 space-y-4"></ul>
+    </div>
+  </div>
+
+  <script>
+    let tasks = [];
+
+    function renderTasks() {
+      const taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.className = `bg-orange-100 p-4 rounded flex justify-between items-center`;
+
+        const taskInfo = document.createElement("div");
+        taskInfo.innerHTML = `<strong>${task.text}</strong><br><small class='text-gray-600'>${task.datetime}</small>`;
+
+        const buttons = document.createElement("div");
+        buttons.className = "space-x-2 flex flex-wrap justify-end";
+
+        const completeBtn = document.createElement("button");
+        completeBtn.textContent = "✅ Selesai";
+        completeBtn.className = "bg-green-400 px-3 py-1 rounded hover:bg-green-500 text-white";
+        completeBtn.onclick = () => completeTask(index);
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.className = "bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500 text-white";
+        editBtn.onclick = () => editTask(index);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Hapus";
+        deleteBtn.className = "bg-red-400 px-3 py-1 rounded hover:bg-red-500 text-white";
+        deleteBtn.onclick = () => deleteTask(index);
+
+        buttons.appendChild(completeBtn);
+        buttons.appendChild(editBtn);
+        buttons.appendChild(deleteBtn);
+
+        li.appendChild(taskInfo);
+        li.appendChild(buttons);
+
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const taskInput = document.getElementById("taskInput");
+      const taskDateTime = document.getElementById("taskDateTime");
+
+      const text = taskInput.value.trim();
+      const datetime = taskDateTime.value;
+
+      if (text && datetime) {
+        tasks.push({ text, datetime });
+        taskInput.value = "";
+        taskDateTime.value = "";
+        renderTasks();
+      } else {
+        alert("Isi tugas dan waktu terlebih dahulu.");
+      }
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    function editTask(index) {
+      const task = tasks[index];
+      const newText = prompt("Edit tugas:", task.text);
+      const newDate = prompt("Edit tanggal dan waktu:", task.datetime);
+
+      if (newText && newDate) {
+        tasks[index].text = newText;
+        tasks[index].datetime = newDate;
+        renderTasks();
+      }
+    }
+
+    function completeTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+  </script>
+
+</body>
+</html>
