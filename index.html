@@ -47,8 +47,14 @@
         if (token) {
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId);
+
+          const fullName = result?.data?.fullName;
+          if (fullName) {
+            localStorage.setItem('userName', fullName);
+          }
+
           alert('Login berhasil! Mengalihkan ke halaman todo...');
-          window.location.href = 'todo.html';
+          window.location.href = 'todolist.html';
         } else {
           alert('Login gagal! Token tidak ditemukan.');
         }
